@@ -70,12 +70,39 @@ void runTests()
     NSLog(@"%@",url);
     passTest([[url absoluteString] isEqualToString: @"file:///Users/heron/.Trash/"],
              @"Returns user parent dir");
+    
+    url = [fileManager URLForDirectory:NSUserDirectory
+                              inDomain:NSUserDomainMask
+                     appropriateForURL:nil
+                                create:NO
+                                 error:NULL];
+    NSLog(@"%@",url);
+    passTest(url == nil,
+             @"Returns nil");
+}
+
+void runTest2()
+{
+    NSURL *homeURL = [NSURL URLWithString: NSHomeDirectory()];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *keysArray = [NSArray arrayWithObject: NSURLFileSizeKey];
+    NSDirectoryEnumerator * en =  [fileManager enumeratorAtURL: homeURL
+                                    includingPropertiesForKeys: keysArray
+                                                       options: NSDirectoryEnumerationSkipsSubdirectoryDescendants
+                                                  errorHandler: NULL];
+    
+    id obj = nil;
+    while((obj = [en nextObject]) != nil)
+    {
+        NSLog(@"%@",obj);
+    }
 }
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
         runTests();
+        runTest2();
     }
     return 0;
 }
